@@ -32,7 +32,10 @@ class Chat(Base):
 
     # Deleting a chat deletes its documents and messages too
     documents: Mapped[list["Document"]] = relationship(
-        back_populates="chat", cascade="all, delete-orphan", passive_deletes=True
+        back_populates="chat",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        order_by="Document.created_at",
     )
     messages: Mapped[list["Message"]] = relationship(
         back_populates="chat",
@@ -70,7 +73,7 @@ class Message(Base):
     )
     role: Mapped[str] = mapped_column(String(20))  # user | assistant
     content: Mapped[str] = mapped_column(Text)
-    # Assistant answers only: [{doc_id, filename, page, chunk_id, score}, ...]
+    # Assistant answers only: [{doc_id, filename, page, chunk_id, score, text}, ...]
     sources: Mapped[list | None] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 

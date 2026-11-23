@@ -1,15 +1,9 @@
-"""Talks to the Groq chat model."""
+"""The Groq chat model used to write answers."""
 
-from langchain_core.messages import BaseMessage
+from langchain_groq import ChatGroq
 
 
 class LLMClient:
     def __init__(self, model_name: str, api_key: str):
-        self.model_name = model_name
-        self.api_key = api_key
-        # Phase 2: ChatGroq instance
-        self.model = None
-
-    def generate(self, messages: list[BaseMessage]) -> str:
-        """Send the prompt messages and return the answer text."""
-        raise NotImplementedError
+        # temperature=0 keeps answers close to the provided context, with fewer creative guesses
+        self.model = ChatGroq(model=model_name, api_key=api_key, temperature=0)

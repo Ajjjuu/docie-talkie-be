@@ -40,7 +40,8 @@ class Source(BaseModel):
     filename: str
     page: int
     chunk_id: str
-    score: float
+    score: float  # similarity between the question and this chunk, 0 to 1
+    text: str  # the chunk itself, so the UI can show what the answer was based on
 
 
 class MessageOut(BaseModel):

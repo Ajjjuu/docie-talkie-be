@@ -14,7 +14,7 @@ class Settings(BaseSettings):
 
     # LLM (Groq)
     groq_api_key: str = ""
-    groq_model: str = "llama-3.3-70b-versatile"
+    groq_model: str = "openai/gpt-oss-120b"
 
     # Embeddings (Gemini)
     google_api_key: str = ""
@@ -52,6 +52,16 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    def check_api_keys(self) -> None:
+        """Fail with a clear message if an API key is missing from .env."""
+        missing = []
+        if not self.groq_api_key:
+            missing.append("GROQ_API_KEY")
+        if not self.google_api_key:
+            missing.append("GOOGLE_API_KEY")
+        if missing:
+            raise RuntimeError(f"Missing {', '.join(missing)} in BE/.env. Add your keys and restart.")
 
     def ensure_data_dirs(self) -> None:
         """Create the data folders if they don't exist yet."""

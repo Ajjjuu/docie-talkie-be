@@ -19,7 +19,20 @@ copy .env.example .env    # then fill in GROQ_API_KEY and GOOGLE_API_KEY
 
 - API: http://localhost:8000/api
 - Swagger docs: http://localhost:8000/docs
-- Health check: http://localhost:8000/api/health
+- Health check: http://localhost:8000/api/check-health
+
+## API
+
+| Method | Path | What it does | Router file |
+|---|---|---|---|
+| GET | `/api/check-health` | DB and Chroma status | `api/health.py` |
+| POST | `/api/chats/create-chat` | create a chat | `api/chats.py` |
+| GET | `/api/chats/list-chats` | list chats, most recent first | `api/chats.py` |
+| GET | `/api/chats/get-chat/{chat_id}` | chat with its documents and messages | `api/chats.py` |
+| POST | `/api/documents/upload-document/{chat_id}` | upload a PDF (form field `file`) and index it | `api/documents.py` |
+| GET | `/api/documents/list-documents/{chat_id}` | list a chat's documents | `api/documents.py` |
+| POST | `/api/messages/ask-question/{chat_id}` | `{"question": "..."}` → answer with sources | `api/messages.py` |
+| GET | `/api/messages/list-messages/{chat_id}` | chat history | `api/messages.py` |
 
 ## Database migrations (Alembic)
 
@@ -36,6 +49,7 @@ app/
   main.py          FastAPI app, CORS, routers
   config.py        settings from .env
   schemas.py       request/response models
+  dependencies.py  gives each route its services
   db/              SQLAlchemy engine + ORM models
   api/             route handlers
   rag/             PDF loading, chunking, embeddings, vector store, LLM, query
